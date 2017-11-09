@@ -1,5 +1,5 @@
 # Backend movie recommendation system
-======================================
+=============================================================================
 ### Create a virtualenv to isolate our package dependencies locally
 - cd tutorial
 - virtualenv -p python3 env

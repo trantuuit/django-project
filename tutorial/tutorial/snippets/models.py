@@ -19,6 +19,22 @@ class UserModel(DjangoCassandraModel):
         get_pk_field = 'user_id'
 
 #Movie model
+#idx,
+# movieId,
+# title,
+# genres,
+# directors,
+# writers,
+# actors,
+# description,
+# year,
+# countries,
+# release,
+# runtime,
+# rating,
+# keywords,
+# poster,
+# slate
 class MovieModel(DjangoCassandraModel):
     idx = columns.Integer( index=True )
     movie_id = columns.Text( primary_key=True )
@@ -28,12 +44,19 @@ class MovieModel(DjangoCassandraModel):
     writers = columns.List( columns.Text, required=False )
     actors = columns.List( columns.Text, required=False ) 
     description = columns.Text( required=False )
+    year = columns.Text(required=False)
+    countries = columns.List( columns.Text, required=False ) 
+    release = columns.Text(required=False)
+    runtime = columns.Text(required=False)
+    rating = columns.Text(required=False)
+    keywords = columns.List( columns.Text, required=False ) 
     poster = columns.Text( required=False )
     slate = columns.Text( required=False )
     class Meta:
         get_pk_field = 'movie_id'
 
 #Collaborative filtering model
+
 class CFModel(DjangoCassandraModel):
     idx_user = columns.Integer( primary_key=True )
     recommendations = columns.List( columns.Text, required=False )

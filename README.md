@@ -10,6 +10,7 @@
 - pip install djangorestframework==3.3.3
 - pip install cassandra-driver==3.11.0
 - pip install django-cassandra-engine==1.2.2
+- pip install djangorestframework-jwt
 - pip install Pygments==2.2.0
 
 ### Run project

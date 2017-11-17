@@ -2,6 +2,13 @@ from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.status import HTTP_401_UNAUTHORIZED
+from rest_framework.authtoken.models import Token
+from snippets.custom import ExampleAuthentication
+
 from snippets.models import (
     UserModel, 
     MovieModel, 
@@ -160,3 +167,21 @@ def getMovieFromWhatIsPupular(request):
         serializer = MovieModelSerializer(array, many=True)
         return JsonResponse(serializer.data, safe=False)
     pass
+
+@csrf_exempt
+def login(request):
+
+    if request.method == 'POST':
+        # user = authenticate(username=username, password=password)
+        data = JSONParser().parse(request)
+        obj = ExampleAuthentication()
+        user = obj.authenticate(data)
+        # print(user)
+        if not user:
+            print('error')
+            return Response({"error": "Login failed"}, status=HTTP_401_UNAUTHORIZED)
+            
+        token = Token.objects.get_or_create(user=user)
+        print(token)
+        return Response({"token": token.key})
+        # return 'hello'

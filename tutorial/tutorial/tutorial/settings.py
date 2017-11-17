@@ -40,14 +40,28 @@ INSTALLED_APPS = [
     'rest_framework',
     'snippets.apps.SnippetsConfig',
     'django_cassandra_engine',
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAdminUser',
+        # 'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticated',
     ],
-    'PAGE_SIZE': 10
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
+
+JWT_AUTH = {
+    'JWT_USER_IDENTIFIER_MODEL': 'UserModel',
+    # 'JWT_USERNAME_FIELD': 'user_id',
+    # 'JWT_PASSWORD_FIELD': 'password',
+    'JWT_USER_IDENTIFIER_FIELD': 'password',
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

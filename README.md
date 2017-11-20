@@ -12,6 +12,7 @@
 - pip install django-cassandra-engine==1.2.2
 - pip install djangorestframework-jwt
 - pip install Pygments==2.2.0
+- pip install django-cors-headers
 
 ### Run project
 - cd tutorial

@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'snippets.apps.SnippetsConfig',
     'django_cassandra_engine',
     'rest_framework.authtoken',
+    'corsheaders',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True   
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -71,6 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'tutorial.urls'

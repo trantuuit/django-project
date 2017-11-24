@@ -185,3 +185,18 @@ def login(request):
         print(token)
         return Response({"token": token.key})
         # return 'hello'
+
+@csrf_exempt
+def getMovie(request, id):
+    try:
+        movie = MovieModel.objects.get(movie_id=id)
+        print(movie)  
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        if movie:
+            serializer = MovieModelSerializer(movie)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return HttpResponse(status=404)

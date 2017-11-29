@@ -90,6 +90,12 @@ class WIPModel(DjangoCassandraModel):
     class Meta:
         get_pk_field = 'idx_movie'
 
+#What is popular model
+class TrendModel(DjangoCassandraModel):
+    movie_id = columns.Text( primary_key=True )
+    class Meta:
+        get_pk_field = 'movie_id'
+
 
 
 

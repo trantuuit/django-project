@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^what-is-popular/$', views.getMovieFromWhatIsPupular),
     url(r'^login/$', views.login),
     url(r'^api-token-auth/', obtain_jwt_token),
-    url(r'^movie/(?P<id>[0-9a-zA-Z]+)/$', views.getMovie)
+    url(r'^movie/(?P<id>[0-9a-zA-Z]+)/$', views.getMovie),
+    url(r'^trending/$', views.getMovieTrending)
 ]

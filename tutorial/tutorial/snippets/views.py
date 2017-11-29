@@ -16,7 +16,8 @@ from snippets.models import (
     SModel, 
     UPModel, 
     LAModel, 
-    WIPModel
+    WIPModel,
+    TrendModel
 )
 from snippets.serializers import (
     UserModelSerializer,
@@ -200,3 +201,25 @@ def getMovie(request, id):
             return JsonResponse(serializer.data, safe=False)
         else:
             return HttpResponse(status=404)
+
+@csrf_exempt
+def getMovieTrending(request):
+    try:
+        list_movie_id = TrendModel.objects.all()
+        # print(list_movie_id)
+        array =[]
+        for i in list_movie_id:
+            movie_id = i.movie_id
+            # print(movie_id)
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            print(movie)
+            if movie != None:
+                array.append(movie)
+        print(array)
+        # print(movie)  
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)

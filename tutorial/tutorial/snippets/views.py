@@ -212,10 +212,10 @@ def getMovieTrending(request):
             movie_id = i.movie_id
             # print(movie_id)
             movie = MovieModel.objects.get(movie_id=movie_id)
-            print(movie)
+            # print(movie)
             if movie != None:
                 array.append(movie)
-        print(array)
+        # print(array)
         # print(movie)  
     except:
         return HttpResponse(status=404)

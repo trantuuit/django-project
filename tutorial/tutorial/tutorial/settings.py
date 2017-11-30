@@ -114,9 +114,9 @@ DATABASES = {
         'NAME': 'db',
         'TEST_NAME': 'test_db',
         # o cong ty
-        # 'HOST': '10.88.113.74',
+        'HOST': '10.88.113.74',
         # o nha
-        'HOST': '127.0.0.1',
+        # 'HOST': '127.0.0.1',
         'OPTIONS': {
             'replication': {
                 'strategy_class': 'SimpleStrategy',

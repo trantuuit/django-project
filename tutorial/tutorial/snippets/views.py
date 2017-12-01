@@ -135,15 +135,18 @@ def getMovieFromLastActionByUserId(request, id):
         user = UserModel.objects.get(user_id=id)
         print(user)   
         list_movie_id = LAModel.objects.get(idx_user=user.idx)
-        print(list_movie_id)
+        print('-------')
+        print(list_movie_id.recommendations)
         array =[]
         for i in list_movie_id.recommendations:
-            words = i.split('|')
-            idx_movie = words[0]
-            print(idx_movie)
-            movie = MovieModel.objects.get(idx=idx_movie)
-            print(movie)
-            array.append(movie)
+            if i != '':
+                words = i.split('|')
+                print(words)
+                idx_movie = words[0]
+                print(idx_movie)
+                movie = MovieModel.objects.get(idx=idx_movie)
+                print(movie)
+                array.append(movie)
     except:
         return HttpResponse(status=404)
 

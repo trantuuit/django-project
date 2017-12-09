@@ -96,6 +96,11 @@ class TrendModel(DjangoCassandraModel):
     class Meta:
         get_pk_field = 'movie_id'
 
+# class user_daily_report(DjangoCassandraModel):
+#     date = columns.BigInt( primary_key=True )
+#     users = columns.Integer(required=False)
+#     class Meta:
+#         get_pk_field = 'date'
 
 
 

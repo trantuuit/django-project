@@ -17,7 +17,12 @@ from snippets.models import (
     UPModel, 
     LAModel, 
     WIPModel,
-    TrendModel
+    TrendModel,
+    ActorsProfileModel,
+    DirectorsProfileModel,
+    GenresProfileModel,
+    WritersProfileModel,
+    SpecificProfileModel
 )
 from snippets.serializers import (
     UserModelSerializer,
@@ -26,7 +31,8 @@ from snippets.serializers import (
     SModelSerializer,
     UPModelSerializer,
     LAModelSerializer,
-    WIPModelSerializer
+    WIPModelSerializer,
+    GenresProfileModelSerializer
 )
 
 from django.http import HttpResponse, JsonResponse
@@ -91,6 +97,26 @@ def user_detail(request,id):
     elif request.method == 'DELETE':
         user.delete()
         return HttpResponse(status=204)
+
+@csrf_exempt
+def login(request,userId,password):
+    try:
+        print(userId)
+        print(password)
+        user = UserModel.objects.get(user_id=userId,password=password)
+        if user is not None:
+            x= True
+
+        pass
+    except UserModel.DoesNotExist:
+        x =False
+        # return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        # serializer = UserModelSerializer(user)
+        return JsonResponse({'match':x})
+        pass
+    pass
 
 @csrf_exempt
 def getMovieFromCollaborativeFilteringByUserId(request, id):
@@ -161,8 +187,8 @@ def getMovieFromWhatIsPupular(request):
         list_movie_id = WIPModel.objects.all()
         array =[]
         for i in list_movie_id:
-            idx_movie = i.idx_movie
-            movie = MovieModel.objects.get(idx=idx_movie)
+            movie_id = i.movie_id
+            movie = MovieModel.objects.get(movie_id=movie_id)
             array.append(movie)
     except:
         return HttpResponse(status=404)
@@ -172,22 +198,22 @@ def getMovieFromWhatIsPupular(request):
         return JsonResponse(serializer.data, safe=False)
     pass
 
-@csrf_exempt
-def login(request):
+# @csrf_exempt
+# def login(request):
 
-    if request.method == 'POST':
-        # user = authenticate(username=username, password=password)
-        data = JSONParser().parse(request)
-        obj = ExampleAuthentication()
-        user = obj.authenticate(data)
-        # print(user)
-        if not user:
-            print('error')
-            return Response({"error": "Login failed"}, status=HTTP_401_UNAUTHORIZED)
+#     if request.method == 'POST':
+#         # user = authenticate(username=username, password=password)
+#         data = JSONParser().parse(request)
+#         obj = ExampleAuthentication()
+#         user = obj.authenticate(data)
+#         # print(user)
+#         if not user:
+#             print('error')
+#             return Response({"error": "Login failed"}, status=HTTP_401_UNAUTHORIZED)
             
-        token = Token.objects.get_or_create(user=user)
-        print(token)
-        return Response({"token": token.key})
+#         token = Token.objects.get_or_create(user=user)
+#         print(token)
+#         return Response({"token": token.key})
         # return 'hello'
 
 @csrf_exempt
@@ -226,3 +252,46 @@ def getMovieTrending(request):
     if request.method == 'GET':
         serializer = MovieModelSerializer(array, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def getGenresMoviesByUserId(request, id):
+    try:
+        user = UserModel.objects.get(user_id=id)
+        # print(user)   
+        list_genres = GenresProfileModel.objects.get(idx_user=user.idx)
+        genre = list_genres.recommendations[0].split('|')[0]
+        list_movies = SpecificProfileModel.objects.get(identifier=genre)
+        # print(list_movies.recommendations)
+        array =[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            # print(words)
+            movie_id = words[0]
+            # print(movie_id)
+            movie = MovieModel.objects.get(movie_id=movie_id)
+        #         print(movie)
+            array.append(movie)
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getTopGenresProfileByUserId(request, id):
+    try:
+        user = UserModel.objects.get(user_id=id)
+        # print(user)   
+        list_genres = GenresProfileModel.objects.get(idx_user=int(user.idx))
+        genre = list_genres.recommendations[0].split('|')[0]
+        # print(list_genres.recommendations)
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        # serializer = GenresProfileModelSerializer(list_genres)
+        # return Response({"message": "Will not appear in schema!"})
+        return JsonResponse({"genre": genre}, safe=False)
+    pass

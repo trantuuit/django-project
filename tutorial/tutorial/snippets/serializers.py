@@ -1,7 +1,17 @@
 from snippets.models import (
-    UserModel, MovieModel, CFModel, SModel, UPModel, LAModel, WIPModel
+    UserModel, 
+    MovieModel, 
+    CFModel, 
+    SModel, 
+    UPModel, 
+    LAModel, 
+    WIPModel, 
+    GenresProfileModel, 
+    ActorsProfileModel,
+    WritersProfileModel,
+    DirectorsProfileModel
 )
-from rest_framework import serializers
+# from rest_framework import serializers
 
 from django_cassandra_engine.rest.serializers import DjangoCassandraModelSerializer
 
@@ -51,3 +61,7 @@ class WIPModelSerializer(DjangoCassandraModelSerializer):
         model = WIPModel
         fields = '__all__'
 
+class GenresProfileModelSerializer(DjangoCassandraModelSerializer):
+    class Meta:
+        model = GenresProfileModel
+        fields = '__all__'

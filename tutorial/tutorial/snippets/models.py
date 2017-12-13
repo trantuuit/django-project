@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from django.db import models
+# from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 import uuid
@@ -85,16 +85,46 @@ class LAModel(DjangoCassandraModel):
 
 #What is popular model
 class WIPModel(DjangoCassandraModel):
-    idx_movie = columns.Integer( primary_key=True )
+    movie_id = columns.Text( primary_key=True )
     views = columns.Integer( required=True )
     class Meta:
-        get_pk_field = 'idx_movie'
+        get_pk_field = 'movie_id'
 
 #What is popular model
 class TrendModel(DjangoCassandraModel):
     movie_id = columns.Text( primary_key=True )
     class Meta:
         get_pk_field = 'movie_id'
+
+class SpecificProfileModel(DjangoCassandraModel):
+    identifier = columns.Text( primary_key=True )
+    recommendations = columns.List( columns.Text, required=False )
+    class Meta:
+        get_pk_field = 'identifier'
+
+class GenresProfileModel(DjangoCassandraModel):
+    idx_user = columns.Integer( primary_key=True )
+    recommendations = columns.List( columns.Text, required=False )
+    class Meta:
+        get_pk_field = 'idx_user'
+
+class ActorsProfileModel(DjangoCassandraModel):
+    idx_user = columns.Integer( primary_key=True )
+    recommendations = columns.List( columns.Text, required=False )
+    class Meta:
+        get_pk_field = 'idx_user'
+
+class WritersProfileModel(DjangoCassandraModel):
+    idx_user = columns.Integer( primary_key=True )
+    recommendations = columns.List( columns.Text, required=False )
+    class Meta:
+        get_pk_field = 'idx_user'
+
+class DirectorsProfileModel(DjangoCassandraModel):
+    idx_user = columns.Integer( primary_key=True )
+    recommendations = columns.List( columns.Text, required=False )
+    class Meta:
+        get_pk_field = 'idx_user'
 
 # class user_daily_report(DjangoCassandraModel):
 #     date = columns.BigInt( primary_key=True )

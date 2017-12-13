@@ -13,5 +13,8 @@ urlpatterns = [
     url(r'^login/$', views.login),
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^movie/(?P<id>[0-9a-zA-Z]+)/$', views.getMovie),
-    url(r'^trending/$', views.getMovieTrending)
+    url(r'^trending/$', views.getMovieTrending),
+    url(r'^genres-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getGenresMoviesByUserId),
+    url(r'^get-top-genres-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopGenresProfileByUserId),
+    url(r'^login/(?P<userId>[0-9a-zA-Z]+)/(?P<password>[0-9a-zA-Z]+)/$', views.login),
 ]

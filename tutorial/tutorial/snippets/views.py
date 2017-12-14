@@ -64,7 +64,17 @@ def userList(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        serializer = UserModelSerializer(data=data)
+        idx = UserModel.objects.all().count()
+        json = {
+            'idx':idx + 1,
+            'user_id':data['userId'],
+            'email': data['email'],
+            'first_name': data['firstname'],
+            'lastname': data['lastname'],
+            'password': data['password'],
+            'url':''
+        }
+        serializer = UserModelSerializer(data=json)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
@@ -294,4 +304,117 @@ def getTopGenresProfileByUserId(request, id):
         # serializer = GenresProfileModelSerializer(list_genres)
         # return Response({"message": "Will not appear in schema!"})
         return JsonResponse({"genre": genre}, safe=False)
+    pass
+
+@csrf_exempt
+def getDirectorMoviesByUserId(request, id):
+    try:
+        user = UserModel.objects.get(user_id=id)
+        # print(user)   
+        list_genres = DirectorsProfileModel.objects.get(idx_user=user.idx)
+        # director = list_genres.recommendations[0].split('|')[0]
+        array =[]
+        for row in list_genres.recommendations[0:4]:
+            director = row.split('|')[0]
+            list_movies = SpecificProfileModel.objects.get(identifier=director)
+            for i in list_movies.recommendations:
+                words = i.split('|')
+                # print(words)
+                movie_id = words[0]
+                # print(movie_id)
+                movie = MovieModel.objects.get(movie_id=movie_id)
+            #         print(movie)
+                array.append(movie)
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getTopDirectorProfileByUserId(request, id):
+    try:
+        user = UserModel.objects.get(user_id=id)
+        # print(user)   
+        list_director = DirectorsProfileModel.objects.get(idx_user=int(user.idx))
+        # print(list_director.recommendations)
+        # director = list_director.recommendations[0].split('|')[0]
+        array = list_director.recommendations[0].split('|')[0]
+        # print(array)
+        for row in list_director.recommendations[1:3]:
+            # print(row)
+            writer = row.split('|')[0]
+            # print(writer)
+            array =array + ', ' + writer
+        # print(list_genres.recommendations)
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        # serializer = GenresProfileModelSerializer(list_genres)
+        # return Response({"message": "Will not appear in schema!"})
+        return JsonResponse({"director": array}, safe=False)
+    pass
+
+@csrf_exempt
+def getWriterMoviesByUserId(request, id):
+    try:
+        user = UserModel.objects.get(user_id=id)
+        # print(user)   
+        list_writer = WritersProfileModel.objects.get(idx_user=user.idx)
+        array =[]
+        for row in list_writer.recommendations[0:4]:
+            writer = row.split('|')[0]
+            list_movies = SpecificProfileModel.objects.get(identifier=writer)
+            for i in list_movies.recommendations:
+                words = i.split('|')
+                # print(words)
+                movie_id = words[0]
+                # print(movie_id)
+                movie = MovieModel.objects.get(movie_id=movie_id)
+            #         print(movie)
+                array.append(movie)
+
+        # writer = list_writer.recommendations[0].split('|')[0]
+        # list_movies = SpecificProfileModel.objects.get(identifier=writer)
+        # # print(list_movies.recommendations)
+        # array =[]
+        # for i in list_movies.recommendations:
+        #     words = i.split('|')
+        #     # print(words)
+        #     movie_id = words[0]
+        #     # print(movie_id)
+        #     movie = MovieModel.objects.get(movie_id=movie_id)
+        # #         print(movie)
+        #     array.append(movie)
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getTopWriterProfileByUserId(request, id):
+    try:
+        user = UserModel.objects.get(user_id=id)
+        # print(user)   
+        list_writer = WritersProfileModel.objects.get(idx_user=int(user.idx))
+        # writers = list_writer.recommendations[0].split('|')
+
+        array = list_writer.recommendations[0].split('|')[0]
+        for row in list_writer.recommendations[1:3]:
+            writer = row.split('|')[0]
+            array =array + ', ' + writer
+        # print(list_genres.recommendations)
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        # serializer = GenresProfileModelSerializer(list_genres)
+        # return Response({"message": "Will not appear in schema!"})
+        return JsonResponse({"writer": array}, safe=False)
     pass

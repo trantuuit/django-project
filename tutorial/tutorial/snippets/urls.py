@@ -17,4 +17,8 @@ urlpatterns = [
     url(r'^genres-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getGenresMoviesByUserId),
     url(r'^get-top-genres-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopGenresProfileByUserId),
     url(r'^login/(?P<userId>[0-9a-zA-Z]+)/(?P<password>[0-9a-zA-Z]+)/$', views.login),
+    url(r'^director-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getDirectorMoviesByUserId),
+    url(r'^get-top-director-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopDirectorProfileByUserId),
+    url(r'^writer-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getWriterMoviesByUserId),
+    url(r'^get-top-writer-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopWriterProfileByUserId),
 ]

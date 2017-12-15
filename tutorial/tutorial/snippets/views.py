@@ -39,13 +39,13 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-
-#curl http://localhost:8000/user/ -X POST 
-# -H "Content-Type: application/json" 
-# -d '{"idx":"1002","user_id":"fsoft1002",
-# "email":"huynhthang@gmail.com","password":"123456",
-# "first_name":"thang","last_name":"huynh","url":"123434"}'
-
+"""
+curl http://localhost:8000/user/ -X POST 
+-H "Content-Type: application/json" 
+-d '{"idx":"1002","user_id":"fsoft1002",
+"email":"huynhthang@gmail.com","password":"123456",
+"first_name":"thang","last_name":"huynh","url":"123434"}'
+"""
 # curl http://localhost:8000/user/fsoft1001/ -X PUT 
 # -H "Content-Type: application/json" 
 # -d '{"idx":"1003","user_id":"fsoft1003",
@@ -63,23 +63,32 @@ def userList(request):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        idx = UserModel.objects.all().count()
-        json = {
-            'idx':idx + 1,
-            'user_id':data['userId'],
-            'email': data['email'],
-            'first_name': data['firstname'],
-            'lastname': data['lastname'],
-            'password': data['password'],
-            'url':''
-        }
-        serializer = UserModelSerializer(data=json)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
+        try:
+            data = JSONParser().parse(request)
+            user = UserModel.objects.get(user_id=data['userId'])
+            if user is not None:
+                return JsonResponse({'successfully':'false'}, status=201)
+            pass
+        except UserModel.DoesNotExist:
+            idx = UserModel.objects.all().count()
+            json = {
+                'idx':idx + 1,
+                'user_id':data['userId'],
+                'email': data['email'],
+                'first_name': data['firstname'],
+                'lastname': data['lastname'],
+                'password': data['password'],
+                'url':'',
+                'isnew':1
+            }
+            serializer = UserModelSerializer(data=json)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({'successfully':'true'}, status=201)
+            pass
         return JsonResponse(serializer.errors, status=400)
 
+        
 @csrf_exempt
 def user_detail(request,id):
     """
@@ -115,16 +124,19 @@ def login(request,userId,password):
         print(password)
         user = UserModel.objects.get(user_id=userId,password=password)
         if user is not None:
+            # print(user['isnew'])
+            isNew=user['isnew']
             x= True
 
         pass
     except UserModel.DoesNotExist:
         x =False
+        isNew = 0
         # return HttpResponse(status=404)
         pass
     if request.method == 'GET':
         # serializer = UserModelSerializer(user)
-        return JsonResponse({'match':x})
+        return JsonResponse({'match':x, 'isNew': isNew})
         pass
     pass
 

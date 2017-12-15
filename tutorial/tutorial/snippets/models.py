@@ -15,6 +15,7 @@ class UserModel(DjangoCassandraModel):
     first_name = columns.Text(required=False)
     last_name = columns.Text(required=False)
     url = columns.Text(required=False)
+    isnew = columns.Integer(required=True)
     class Meta:
         get_pk_field = 'user_id'
 

@@ -16,6 +16,7 @@ class UserModel(DjangoCassandraModel):
     last_name = columns.Text(required=False)
     url = columns.Text(required=False)
     isnew = columns.Integer(required=True)
+    survey = columns.List( columns.Text, required=False )
     class Meta:
         get_pk_field = 'user_id'
 
@@ -127,6 +128,14 @@ class DirectorsProfileModel(DjangoCassandraModel):
     class Meta:
         get_pk_field = 'idx_user'
 
+class UserEventModel(DjangoCassandraModel):
+    idx_user = columns.Integer( primary_key=True )
+    idx_movie = columns.Integer( primary_key=True )
+    type_event = columns.Text( required=False )
+    time = columns.Integer( primary_key=True )
+    rating = columns.Integer( required=False)
+    class Meta:
+        get_pk_field = 'idx_user'
 # class user_daily_report(DjangoCassandraModel):
 #     date = columns.BigInt( primary_key=True )
 #     users = columns.Integer(required=False)

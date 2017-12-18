@@ -9,7 +9,8 @@ from snippets.models import (
     GenresProfileModel, 
     ActorsProfileModel,
     WritersProfileModel,
-    DirectorsProfileModel
+    DirectorsProfileModel,
+    UserEventModel
 )
 # from rest_framework import serializers
 
@@ -20,6 +21,12 @@ class UserModelSerializer(DjangoCassandraModelSerializer):
 
     class Meta:
         model = UserModel
+        fields = '__all__'
+
+class UserEventModelSerializer(DjangoCassandraModelSerializer):
+
+    class Meta:
+        model = UserEventModel
         fields = '__all__'
 
 class MovieModelSerializer(DjangoCassandraModelSerializer):

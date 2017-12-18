@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.authtoken.models import Token
 from snippets.custom import ExampleAuthentication
-
+from datetime import datetime, timezone, date
 from snippets.models import (
     UserModel, 
     MovieModel, 
@@ -32,7 +32,8 @@ from snippets.serializers import (
     UPModelSerializer,
     LAModelSerializer,
     WIPModelSerializer,
-    GenresProfileModelSerializer
+    GenresProfileModelSerializer,
+    UserEventModelSerializer
 )
 
 from django.http import HttpResponse, JsonResponse
@@ -87,6 +88,54 @@ def userList(request):
                 return JsonResponse({'successfully':'true'}, status=201)
             pass
         return JsonResponse(serializer.errors, status=400)
+
+@csrf_exempt
+def userevent(request):
+    if request.method == 'POST':
+        try:
+            data = JSONParser().parse(request)
+            print(data)
+            json = {
+                'idx_user': data['idx_user'],
+                'idx_movie': data['idx_movie'],
+                'time': int(datetime.now().timestamp()),
+                'rating': data['rating'],
+                'type_event': data['type_event']
+            }
+            serializer =UserEventModelSerializer(data=json)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({'successfully':'true'}, status=201)
+            pass
+        except:
+            return JsonResponse(serializer.errors, status=400)
+            pass
+
+@csrf_exempt
+def registerSurvey(request):
+    if request.method == 'POST':
+        try:
+            data = JSONParser().parse(request)
+            print(data)
+            json = {
+                'idx': data['idx'],
+                'user_id': data['userId'],
+                'email': data['email'],
+                'first_name': data['firstname'],
+                'lastname': data['lastname'],
+                'password': data['password'],
+                'url':data['url'],
+                'isnew':data['isnew'],
+                'survey': data['survey']
+            }
+            serializer = UserModelSerializer(data=json)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({'successfully':'true'}, status=201)
+            pass
+        except:
+            return JsonResponse(serializer.errors, status=400)
+            pass
 
         
 @csrf_exempt
@@ -429,4 +478,214 @@ def getTopWriterProfileByUserId(request, id):
         # serializer = GenresProfileModelSerializer(list_genres)
         # return Response({"message": "Will not appear in schema!"})
         return JsonResponse({"writer": array}, safe=False)
+    pass
+
+@csrf_exempt
+def getDrama(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Drama')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getAction(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Action')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getAnimation(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Animation')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getComedy(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Comedy')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getSci_Fi(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Sci-Fi')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getDocumentary(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Documentary')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getRomance(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Romance')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getHorror(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Horror')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getThriller(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Thriller')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+
+@csrf_exempt
+def getAdventure(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Adventure')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getFantasy(request):
+    try:
+        list_movies = SpecificProfileModel.objects.get(identifier='Fantasy')
+        array=[]
+        for i in list_movies.recommendations:
+            words = i.split('|')
+            movie_id = words[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            array.append(movie)
+        pass
+    except:
+        return HttpResponse(status=404)
+        pass
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(serializer.data, safe=False)
     pass

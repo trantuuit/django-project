@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^Fantasy/$', views.getFantasy),
     url(r'^register-survey/$', views.registerSurvey),
     url(r'^userevent/$', views.userevent),
+    url(r'^last-like/(?P<id>[0-9a-zA-Z]+)/$', views.getLastLike)
 ]

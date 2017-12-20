@@ -130,9 +130,9 @@ class DirectorsProfileModel(DjangoCassandraModel):
 
 class UserEventModel(DjangoCassandraModel):
     idx_user = columns.Integer( primary_key=True )
+    time = columns.Integer( primary_key=True )
     idx_movie = columns.Integer( primary_key=True )
     type_event = columns.Text( required=False )
-    time = columns.Integer( required=False )
     rating = columns.Integer( required=False)
     class Meta:
         get_pk_field = 'idx_user'

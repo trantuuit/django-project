@@ -22,7 +22,8 @@ from snippets.models import (
     DirectorsProfileModel,
     GenresProfileModel,
     WritersProfileModel,
-    SpecificProfileModel
+    SpecificProfileModel,
+    UserEventModel
 )
 from snippets.serializers import (
     UserModelSerializer,
@@ -176,16 +177,18 @@ def login(request,userId,password):
             # print(user['isnew'])
             isNew=user['isnew']
             x= True
+            idx_user = user['idx']
 
         pass
     except UserModel.DoesNotExist:
         x =False
         isNew = 0
+        idx_user = -1
         # return HttpResponse(status=404)
         pass
     if request.method == 'GET':
         # serializer = UserModelSerializer(user)
-        return JsonResponse({'match':x, 'isNew': isNew})
+        return JsonResponse({'match':x, 'isNew': isNew, 'idx_user': idx_user})
         pass
     pass
 
@@ -291,7 +294,7 @@ def getMovieFromWhatIsPupular(request):
 def getMovie(request, id):
     try:
         movie = MovieModel.objects.get(movie_id=id)
-        print(movie)  
+        # print(movie)  
     except:
         return HttpResponse(status=404)
 
@@ -631,7 +634,6 @@ def getHorror(request):
         serializer = MovieModelSerializer(array, many=True)
         return JsonResponse(serializer.data, safe=False)
     pass
-
 @csrf_exempt
 def getThriller(request):
     try:
@@ -650,8 +652,6 @@ def getThriller(request):
         serializer = MovieModelSerializer(array, many=True)
         return JsonResponse(serializer.data, safe=False)
     pass
-
-
 @csrf_exempt
 def getAdventure(request):
     try:
@@ -689,3 +689,18 @@ def getFantasy(request):
         serializer = MovieModelSerializer(array, many=True)
         return JsonResponse(serializer.data, safe=False)
     pass
+
+@csrf_exempt
+def getLastLike(request,id):
+    try:
+        user_event = UserEventModel.objects(idx_user=id, rating=5).order_by("-time").limit(1)[0]
+        idx_movie = user_event['idx_movie']
+        movie = MovieModel.objects.get(idx=idx_movie)
+    except:
+        return HttpResponse(status=404)
+    if request.method == 'GET':
+        if movie:
+            serializer = MovieModelSerializer(movie)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return HttpResponse(status=404)

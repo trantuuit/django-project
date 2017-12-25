@@ -201,14 +201,21 @@ def getMovieFromCollaborativeFilteringByUserId(request, id):
         for i in cf.recommendations:
             words = i.split('|')
             idx_movie = words[0]
+            score = words[1]
+            print(score)
             movie = MovieModel.objects.get(idx=int(idx_movie))
-            array.append(movie)
+            # print(type(movie))
+            temp = dict(movie)
+            temp['score'] = score
+            # print(dict(movie)+dict({'score':score}))
+            # print(dict(temp))
+            array.append(temp)
     except:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = MovieModelSerializer(array, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        # serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(array, safe=False)
     pass
 
 @csrf_exempt
@@ -219,14 +226,17 @@ def getMovieFromSimilarityByMovieId(request, id):
         for i in list_movie_id.recommendations:
             words = i.split('|')
             idx_movie = words[0]
+            similarity = words[1]
             movie = MovieModel.objects.get(movie_id=idx_movie)
-            array.append(movie)
+            temp = dict(movie)
+            temp['similarity'] = similarity
+            array.append(temp)
     except:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = MovieModelSerializer(array, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        # serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(array, safe=False)
     pass
 
 @csrf_exempt
@@ -262,14 +272,17 @@ def getMovieFromWhatIsPupular(request):
         array =[]
         for i in list_movie_id:
             movie_id = i.movie_id
+            count = i.views
             movie = MovieModel.objects.get(movie_id=movie_id)
-            array.append(movie)
+            temp = dict(movie)
+            temp['like'] = count
+            array.append(temp)
     except:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = MovieModelSerializer(array, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        # serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(array, safe=False)
     pass
 
 # @csrf_exempt

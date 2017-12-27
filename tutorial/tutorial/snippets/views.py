@@ -326,19 +326,21 @@ def getMovieTrending(request):
         array =[]
         for i in list_movie_id:
             movie_id = i.movie_id
-            # print(movie_id)
+            rank = i.rank
+            # print(rank)
             movie = MovieModel.objects.get(movie_id=movie_id)
             # print(movie)
-            if movie != None:
-                array.append(movie)
+            temp = dict(movie)
+            temp['rank'] = rank
+            array.append(temp)
         # print(array)
         # print(movie)  
     except:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = MovieModelSerializer(array, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        # serializer = MovieModelSerializer(array, many=True)
+        return JsonResponse(array, safe=False)
 
 @csrf_exempt
 def getGenresMoviesByUserId(request, id):

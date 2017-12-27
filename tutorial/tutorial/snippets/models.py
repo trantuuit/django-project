@@ -95,6 +95,8 @@ class WIPModel(DjangoCassandraModel):
 
 #What is popular model
 class TrendModel(DjangoCassandraModel):
+    bucket = columns.Integer( primary_key=True)
+    rank = columns.Integer( primary_key=True, clustering_order='ASC')
     movie_id = columns.Text( primary_key=True )
     class Meta:
         get_pk_field = 'movie_id'

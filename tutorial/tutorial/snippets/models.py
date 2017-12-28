@@ -133,17 +133,20 @@ class DirectorsProfileModel(DjangoCassandraModel):
 
 class UserEventModel(DjangoCassandraModel):
     idx_user = columns.Integer( primary_key=True )
-    time = columns.Integer( primary_key=True )
+    time = columns.Integer( primary_key=True, clustering_order='DESC' )
     idx_movie = columns.Integer( primary_key=True )
     type_event = columns.Text( required=False )
     rating = columns.Integer( required=False)
     class Meta:
         get_pk_field = 'idx_user'
-# class user_daily_report(DjangoCassandraModel):
-#     date = columns.BigInt( primary_key=True )
-#     users = columns.Integer(required=False)
-#     class Meta:
-#         get_pk_field = 'date'
+
+class LastLikeModel(DjangoCassandraModel):
+    idx_user = columns.Integer( primary_key=True )
+    time = columns.Integer( required=True)
+    idx_movie = columns.Integer( required=True )
+    class Meta:
+        get_pk_field = 'idx_user'
+
 
 
 

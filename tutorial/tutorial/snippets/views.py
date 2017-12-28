@@ -23,7 +23,8 @@ from snippets.models import (
     GenresProfileModel,
     WritersProfileModel,
     SpecificProfileModel,
-    UserEventModel
+    UserEventModel,
+    LastLikeModel
 )
 from snippets.serializers import (
     UserModelSerializer,
@@ -708,7 +709,9 @@ def getFantasy(request):
 @csrf_exempt
 def getLastLike(request,id):
     try:
-        user_event = UserEventModel.objects(idx_user=id, rating=5).order_by("-time").limit(1)[0]
+        print(id)
+        user_event = LastLikeModel.objects.get(idx_user=id)
+        print(user_event['idx_movie'])
         idx_movie = user_event['idx_movie']
         movie = MovieModel.objects.get(idx=idx_movie)
     except:

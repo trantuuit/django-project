@@ -203,7 +203,7 @@ def getMovieFromCollaborativeFilteringByUserId(request, id):
             words = i.split('|')
             idx_movie = words[0]
             score = words[1]
-            print(score)
+            # print(score)
             movie = MovieModel.objects.get(idx=int(idx_movie))
             # print(type(movie))
             temp = dict(movie)
@@ -330,6 +330,7 @@ def getMovieTrending(request):
             rank = i.rank
             # print(rank)
             movie = MovieModel.objects.get(movie_id=movie_id)
+            # print(movie)
             # print(movie)
             temp = dict(movie)
             temp['rank'] = rank
@@ -709,9 +710,9 @@ def getFantasy(request):
 @csrf_exempt
 def getLastLike(request,id):
     try:
-        print(id)
+        # print(id)
         user_event = LastLikeModel.objects.get(idx_user=id)
-        print(user_event['idx_movie'])
+        # print(user_event['idx_movie'])
         idx_movie = user_event['idx_movie']
         movie = MovieModel.objects.get(idx=idx_movie)
     except:

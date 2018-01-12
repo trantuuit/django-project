@@ -135,6 +135,7 @@ class UserEventModel(DjangoCassandraModel):
     idx_user = columns.Integer( primary_key=True )
     time = columns.BigInt( primary_key=True, clustering_order='DESC' )
     idx_movie = columns.Integer( primary_key =True )
+    movie_id = columns.Text( required=False )
     type_event = columns.Text( required=False )
     value = columns.Float( required=False)
     class Meta:
@@ -147,6 +148,13 @@ class LastLikeModel(DjangoCassandraModel):
     idx_movie = columns.Integer( required=True )
     class Meta:
         get_pk_field = 'idx_user'
+
+class LastWatchModel(DjangoCassandraModel):
+    idx_user = columns.Integer( primary_key=True )
+    recommendations = columns.List(columns.Text, required=True)
+    class Meta:
+        get_pk_field = 'idx_user'
+
 
 
 

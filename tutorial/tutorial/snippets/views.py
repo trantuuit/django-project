@@ -1,7 +1,8 @@
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
-
+from kafka import KafkaProducer
+import json
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -55,6 +56,7 @@ curl http://localhost:8000/user/ -X POST
 # "email":"trantu.uit@gmail.com","password":"tu",
 # "first_name":"tu","last_name":"tran"}'
 
+
 @csrf_exempt
 def userList(request):
     """
@@ -95,22 +97,24 @@ def userList(request):
 def userevent(request):
     if request.method == 'POST':
         try:
+
             data = JSONParser().parse(request)
-            print(data)
-            json = {
+            # print(data)
+            data_json = {
                 'idx_user': data['idx_user'],
                 'idx_movie': data['idx_movie'],
-                'time': int(datetime.now().timestamp()),
-                'rating': data['rating'],
+                'time': data['time'],
+                'movie_id': data['movie_id'],
+                'value': data['value'],
                 'type_event': data['type_event']
             }
-            serializer =UserEventModelSerializer(data=json)
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse({'successfully':'true'}, status=201)
-            pass
+            producer = KafkaProducer(bootstrap_servers='localhost:9092',value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+            producer.send('user_event', data_json)
+            producer.flush()
+            producer = KafkaProducer(retries=5)
+            return JsonResponse({'successfully':'true'}, status=201)
         except:
-            return JsonResponse(serializer.errors, status=400)
+            # return JsonResponse(serializer.errors, status=400)
             pass
 
 @csrf_exempt

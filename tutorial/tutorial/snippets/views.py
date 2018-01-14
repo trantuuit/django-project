@@ -10,6 +10,7 @@ from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.authtoken.models import Token
 from snippets.custom import ExampleAuthentication
 from datetime import datetime, timezone, date
+
 from snippets.models import (
     UserModel, 
     MovieModel, 
@@ -25,7 +26,8 @@ from snippets.models import (
     WritersProfileModel,
     SpecificProfileModel,
     UserEventModel,
-    LastLikeModel
+    LastLikeModel,
+    LastWatchModel
 )
 from snippets.serializers import (
     UserModelSerializer,
@@ -43,6 +45,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+import datetime
 """
 curl http://localhost:8000/user/ -X POST 
 -H "Content-Type: application/json" 
@@ -114,7 +117,7 @@ def userevent(request):
             producer = KafkaProducer(retries=5)
             return JsonResponse({'successfully':'true'}, status=201)
         except:
-            # return JsonResponse(serializer.errors, status=400)
+            return JsonResponse( status=400)
             pass
 
 @csrf_exempt
@@ -726,4 +729,45 @@ def getLastLike(request,id):
             serializer = MovieModelSerializer(movie)
             return JsonResponse(serializer.data, safe=False)
         else:
+            return HttpResponse(status=404)
+
+@csrf_exempt
+def getTopLastWatch(request,id):
+    if request.method == 'GET':
+        try:
+            # print(id)
+            list_watch = LastWatchModel.objects.get(idx_user=id)
+            el = list_watch['recommendations'][0].replace('[','').replace(']','').split(',')
+            movie_id = el[0]
+            movie = MovieModel.objects.get(movie_id=movie_id)
+            serializer = MovieModelSerializer(movie)
+            temp = dict(serializer.data)
+            utc_time = datetime.datetime.fromtimestamp(int(el[1]), timezone.utc)
+            local_time = utc_time.astimezone()
+            date_convert = str(local_time.strftime("%Y-%m-%d %H:%M:%S"))
+            temp['last_watched'] = date_convert
+            return JsonResponse(temp, safe=False)
+        except:
+            return HttpResponse(status=404)
+
+@csrf_exempt
+def getLastWatchByUserId(request,id):
+    if request.method == 'GET':
+        try:
+            # print(id)
+            list_watch = LastWatchModel.objects.get(idx_user=id)
+            sub_list = list_watch['recommendations']
+            print(sub_list)
+            array=[]
+            for row in sub_list:
+                words = row.replace('[','').replace(']','').split(',')
+                movie_id = words[0]
+                movie = MovieModel.objects.get(movie_id=movie_id)
+                # print(movie)
+                array.append(movie)
+            # print(array)
+            serializer = MovieModelSerializer(array,many=True)
+
+            return JsonResponse(serializer.data, safe=False)
+        except:
             return HttpResponse(status=404)

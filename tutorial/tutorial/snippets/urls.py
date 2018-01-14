@@ -34,5 +34,7 @@ urlpatterns = [
     url(r'^Fantasy/$', views.getFantasy),
     url(r'^register-survey/$', views.registerSurvey),
     url(r'^userevent/$', views.userevent),
-    url(r'^last-like/(?P<id>[0-9a-zA-Z]+)/$', views.getLastLike)
+    url(r'^last-like/(?P<id>[0-9a-zA-Z]+)/$', views.getLastLike),
+    url(r'^get-top-last-watch/(?P<id>[0-9a-zA-Z]+)/$', views.getTopLastWatch),
+    url(r'^get-last-watch/(?P<id>[0-9a-zA-Z]+)/$', views.getLastWatchByUserId)
 ]

@@ -13,7 +13,7 @@
 - pip install djangorestframework-jwt
 - pip install Pygments==2.2.0
 - pip install django-cors-headers
-
+- pip install kafka-python
 ### Run project
 - cd tutorial
 - python manage.py runserver

@@ -398,26 +398,32 @@ def getTopGenresProfileByUserId(request, id):
 def getDirectorMoviesByUserId(request, id):
     try:
         user = UserModel.objects.get(user_id=id)
-        # print(user)   
-        list_genres = DirectorsProfileModel.objects.get(idx_user=user.idx)
-        # director = list_genres.recommendations[0].split('|')[0]
+        list_directors = DirectorsProfileModel.objects.get(idx_user=user.idx)
         array =[]
-        for row in list_genres.recommendations[0:4]:
+        check = []
+        array_director = []
+        for row in list_directors.recommendations[0:3]:
             director = row.split('|')[0]
+            array_director.append(director)
+            # print(director)
             list_movies = SpecificProfileModel.objects.get(identifier=director)
             for i in list_movies.recommendations:
                 words = i.split('|')
-                # print(words)
                 movie_id = words[0]
-                # print(movie_id)
-                movie = MovieModel.objects.get(movie_id=movie_id)
-            #         print(movie)
-                array.append(movie)
+                check.append(movie_id)
+        result = list(set(check))
+        for row in result:
+            movie = MovieModel.objects.get(movie_id=row)
+            array.append(movie)
     except:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
         serializer = MovieModelSerializer(array, many=True)
+        # output_dict = json.loads(json.dumps(serializer.data))
+        # array = []
+        # array.append({'top-director': array_director})
+        # array.append(output_dict)
         return JsonResponse(serializer.data, safe=False)
     pass
 
@@ -449,40 +455,74 @@ def getTopDirectorProfileByUserId(request, id):
 @csrf_exempt
 def getWriterMoviesByUserId(request, id):
     try:
-        user = UserModel.objects.get(user_id=id)
-        # print(user)   
+        user = UserModel.objects.get(user_id=id) 
         list_writer = WritersProfileModel.objects.get(idx_user=user.idx)
         array =[]
-        for row in list_writer.recommendations[0:4]:
+        check = []
+        array_writer = []
+        for row in list_writer.recommendations[0:3]:
             writer = row.split('|')[0]
+            array_writer.append(writer)
             list_movies = SpecificProfileModel.objects.get(identifier=writer)
             for i in list_movies.recommendations:
                 words = i.split('|')
-                # print(words)
                 movie_id = words[0]
-                # print(movie_id)
-                movie = MovieModel.objects.get(movie_id=movie_id)
-            #         print(movie)
-                array.append(movie)
+                check.append(movie_id)
+        result = list(set(check))
+        for row in result:
+            movie = MovieModel.objects.get(movie_id=row)
+            array.append(movie)
 
-        # writer = list_writer.recommendations[0].split('|')[0]
-        # list_movies = SpecificProfileModel.objects.get(identifier=writer)
-        # # print(list_movies.recommendations)
-        # array =[]
-        # for i in list_movies.recommendations:
-        #     words = i.split('|')
-        #     # print(words)
-        #     movie_id = words[0]
-        #     # print(movie_id)
-        #     movie = MovieModel.objects.get(movie_id=movie_id)
-        # #         print(movie)
-        #     array.append(movie)
     except:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
         serializer = MovieModelSerializer(array, many=True)
+        # comment cai nay lai nha dm
+        # output_dict = json.loads(json.dumps(serializer.data))
+        # array = []
+        # array.append({'top-writer': array_writer})
+        # array.append(output_dict)
+        # return JsonResponse(array, safe=False)
         return JsonResponse(serializer.data, safe=False)
+    pass
+
+@csrf_exempt
+def getActorMoviesByUserId(request, id):
+    try:
+        user = UserModel.objects.get(user_id=id) 
+        list_actor = ActorsProfileModel.objects.get(idx_user=user.idx)
+        # print(list_actor.recommendations)
+        array =[]
+        check = []
+        array_actor = []
+        for row in list_actor.recommendations[0:3]:
+            actor = row.split('|')[0]
+            array_actor.append(actor)
+            list_movies = SpecificProfileModel.objects.get(identifier=actor)
+            for i in list_movies.recommendations:
+                words = i.split('|')
+                movie_id = words[0]
+                # print(movie_id)
+                check.append(movie_id)
+        # print(check)
+        result = list(set(check))
+        # print(result)
+        for row in result:
+            movie = MovieModel.objects.get(movie_id=row)
+            array.append(movie)
+        # print(array)
+    except:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = MovieModelSerializer(array, many=True)
+        output_dict = json.loads(json.dumps(serializer.data))
+        array = []
+        array.append({'top-actor': array_actor})
+        array.append(output_dict)
+        # print(array)
+        return JsonResponse(array, safe=False)
     pass
 
 @csrf_exempt
@@ -769,5 +809,58 @@ def getLastWatchByUserId(request,id):
             serializer = MovieModelSerializer(array,many=True)
 
             return JsonResponse(serializer.data, safe=False)
+        except:
+            return HttpResponse(status=404)
+
+@csrf_exempt
+def getTopUserProfile(request,id):
+    if request.method == 'GET':
+        try:
+            user = UserModel.objects.get(user_id=id)
+            # print(user)   
+            list_genres = GenresProfileModel.objects.get(idx_user=int(user.idx))
+            list_actors = ActorsProfileModel.objects.get(idx_user=int(user.idx))
+            list_writers = WritersProfileModel.objects.get(idx_user=int(user.idx))
+            list_directors = DirectorsProfileModel.objects.get(idx_user=int(user.idx))
+            dict_user_profile = {}
+
+            array_genres = []
+            for row in list_genres['recommendations'][:5]:
+                words = row.split('|')
+                temp = {}
+                temp['genre'] = words[0]
+                temp['percent'] = words[1]
+                array_genres.append(temp)
+            dict_user_profile['genres'] = array_genres
+
+            array_writers = []
+            for row in list_writers['recommendations'][:5]:
+                words = row.split('|')
+                temp = {}
+                temp['writer'] = words[0]
+                temp['percent'] = words[1]
+                array_writers.append(temp)
+            dict_user_profile['writers'] = array_writers
+            
+            array_directors = []
+            for row in list_directors['recommendations'][:5]:
+                words = row.split('|')
+                temp = {}
+                temp['director'] = words[0]
+                temp['percent'] = words[1]
+                array_directors.append(temp)
+            dict_user_profile['directors'] = array_directors
+
+            array_actors = []
+            for row in list_actors['recommendations'][:5]:
+                words = row.split('|')
+                temp = {}
+                temp['actor'] = words[0]
+                temp['percent'] = words[1]
+                array_actors.append(temp)
+            dict_user_profile['actors'] = array_actors
+            # print(dict_user_profile)
+            return JsonResponse(dict_user_profile, safe=False)
+            pass
         except:
             return HttpResponse(status=404)

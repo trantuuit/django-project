@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^get-top-genres-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopGenresProfileByUserId),
     url(r'^login/(?P<userId>[0-9a-zA-Z]+)/(?P<password>[0-9a-zA-Z]+)/$', views.login),
     url(r'^director-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getDirectorMoviesByUserId),
+    url(r'^actor-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getActorMoviesByUserId),
     url(r'^get-top-director-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopDirectorProfileByUserId),
     url(r'^writer-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getWriterMoviesByUserId),
     url(r'^get-top-writer-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopWriterProfileByUserId),
@@ -36,5 +37,6 @@ urlpatterns = [
     url(r'^userevent/$', views.userevent),
     url(r'^last-like/(?P<id>[0-9a-zA-Z]+)/$', views.getLastLike),
     url(r'^get-top-last-watch/(?P<id>[0-9a-zA-Z]+)/$', views.getTopLastWatch),
-    url(r'^get-last-watch/(?P<id>[0-9a-zA-Z]+)/$', views.getLastWatchByUserId)
+    url(r'^get-last-watch/(?P<id>[0-9a-zA-Z]+)/$', views.getLastWatchByUserId),
+    url(r'^get-top-user-profile/(?P<id>[0-9a-zA-Z]+)/$', views.getTopUserProfile)
 ]
